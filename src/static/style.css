@@ -1,0 +1,234 @@
+/* Colour swatches */
+:root {
+    --clr-thistle: #E3C0D3;
+    --clr-mountbattenpink: #95818D;
+    --clr-paynesgray: #576066;
+    --clr-slategray: #2C514C;
+    --clr-gunmetal: #122932;
+    --clr-white: #ffffff;
+    --clr-black: #000000;
+}
+
+/* ---- GENERAL STYLING ---- */
+
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600&display=swap');
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+  }
+  
+  body {
+    font-family: 'Quicksand', 'Calibri', sans-serif;
+    color: var(--clr-white);
+    background-color: var(--clr-gunmetal);
+    padding: 0;
+  }
+
+  .h1-marginBtm{
+    margin-bottom: 8%;
+  }
+  
+  h1 {
+    font-weight: 500;
+    font-size: 2.8vw;
+  }
+  
+  h2 {
+    font-weight: 400;
+    font-size: 1.5vw;
+    margin-bottom: 1%;
+  }
+  
+  h3 {
+    font-size: 1.3vw;
+  }
+  
+  h4 {
+    font-size: 1.2vw;
+  }
+  
+  p {
+    font-weight: 300;
+    font-size: 1.2vw;
+  }
+  
+  p.sml {
+    font-weight: 100;
+    font-size: 1vw;
+  }
+
+  i{
+    color: black;
+  }
+  
+  a {
+    text-decoration: none;
+    color: var(--clr-thistle);
+  }
+  
+  a:hover {
+    transform: scale(1.05);
+  }
+
+  button, .input-btn {
+    height: 6vh;
+    width: 11vw;
+    border-radius: 9px;
+    border: 0;
+    box-shadow: 2px 2px rgba(0, 0, 0, 0.191);
+    cursor: pointer;
+  }
+
+  button:hover{
+    box-shadow: 0 0;
+    width: 10.9vw;
+  }
+
+  .paddedBottom{
+    margin-bottom: 12%;
+  }
+
+  /* NAV */
+
+  nav {
+    position: absolute;
+    width: 25vw;
+    top:0;
+    height: 11vh;
+    padding: 1%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  #logo-dummy {
+    height: 50px;
+    width: 50px;
+    background-color: thistle;
+  }
+
+  /* FOOTER */
+  footer {
+    height: 15vh;
+    width: 100%;
+    background-color: var(--clr-black);
+  }
+
+  /* FIRST SCREEN */
+  .home-container{
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .usertype-box{
+    width: 33.3%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--clr-paynesgray);
+    padding: 1% 3.5%;
+  }
+
+  .usertype-box:nth-child(2){
+    background-color: var(--clr-slategray);
+  }
+  .usertype-box:nth-child(3){
+    background-color: var(--clr-gunmetal);
+  }
+
+  .usertype-box button {
+    margin-top: 5%;
+  }
+
+/* REGISTER PAGE */
+
+#register-page {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.registration-form{
+  width: 50%;
+  display: grid;
+  row-gap: 2vh;
+  position: relative;
+}
+
+#register-btn{
+  width: 25%;
+  position: absolute;
+  right: 0;
+  bottom: -12vh;
+}
+
+.error-message{
+  color:var(--clr-thistle);
+  font-weight: 500;
+}
+
+/* Pick Appointment Page */
+
+.slot-box {
+  height: 60px;
+  width: 50%;
+  margin: 10px 0;
+  display:grid;
+  grid-template-columns: 30% 40% 30%;
+  font-size: 15px;
+  align-items: center;
+  justify-items: center;
+  background-color: var(--clr-thistle);
+  border-radius: 10px;
+  color: var(--clr-gunmetal);
+  box-shadow: #122932 2px 2px 2px;
+}
+
+.appointments-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--clr-paynesgray);
+}
+
+.arrow-box {
+  height: 60px;
+  width: 50%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items:center;
+  color: var(--clr-white);
+  font-size: 30px;
+  margin-bottom: 2%;
+}
+
+.confirmation-popup{
+  position: absolute;
+  width: 40%;
+  height: 60%;
+  background-color: var(--clr-slategray);
+  box-shadow: #122932 2px 2px 5px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content:space-around;
+}
+
+.confirmation-popup div{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content:space-around;
+  min-height: 30%;
+}
