@@ -1,9 +1,11 @@
 import { BrowserRouter, NavLink, Routes, Route } from "react-router-dom";
 import Home from "./Home.js";
+import Login from "./Login.js";
 import Register from "./Register.js";
+import DancerPage from "./DancerPage.js";
+import PhysioPage from "./PhysioPage.js";
+import ManagementPage from "./ManagementPage.js";
 import PickAppointment from "./PickAppointment.js";
-
-
 
 
 function App() {
@@ -18,6 +20,10 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />}/>
             <Route path="/register" element={<Register />}/>
+            <Route path="/login" element={<Login />}/>
+            <Route path="/management-page" element={<ManagementPage />}/>
+            <Route path="/physio-page" element={<PhysioPage />}/>
+            <Route path="/dancer-page" element={<DancerPage />}/>
             <Route path="/pick-appointment" element={<PickAppointment />}/>
           </Routes>
         </div>

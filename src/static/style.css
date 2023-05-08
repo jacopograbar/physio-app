@@ -149,7 +149,7 @@
 
 /* REGISTER PAGE */
 
-#register-page {
+#register-page, #login-page {
   height: 100vh;
   display: flex;
   justify-content: center;
