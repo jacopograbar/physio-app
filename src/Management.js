@@ -1,14 +1,14 @@
 import React from 'react';
 
 
-const ManagementPage = () => {
+const Management = () => {
 
     return (
-        <div className="home-container">
+        <div id="management-page">
             This is management's home page
         </div>
 
     )
 }
 
-export default ManagementPage;
+export default Management;

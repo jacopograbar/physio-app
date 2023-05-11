@@ -1,14 +1,14 @@
 import React from 'react';
 
 
-const PhysioPage = () => {
+const Physio = () => {
 
     return (
-        <div className="home-container">
+        <div id="physio-page">
             This is the physio's home page
         </div>
 
     )
 }
 
-export default PhysioPage;
+export default Physio;

@@ -1,12 +1,29 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import { getUserType, setUserSession } from './utils/utils.js';
 
-const Login = () => {
+const Login = ({setIsLoggedIn}) => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState(null);
     const navigate = useNavigate();
+
+    var background = "#122932";
+    var destinationPage = "";
+
+    // set background color and destination page depending on the user type
+    const userType = getUserType();
+      
+    if (userType === "Dancer"){
+        background = "#576066";
+        destinationPage = "/dancer";
+    } else if(userType === "Management"){
+        background = "#2C514C";
+        destinationPage = "/management";
+    } else {
+        destinationPage = "/physio";
+    }
 
     const submitHandler = async (event) => {
         event.preventDefault();
@@ -23,29 +40,18 @@ const Login = () => {
         // reset error message
         setMessage(null);
 
-        // check user tipe and set variable
-        const userType = "dancer";
+        // set user in session variable
+        setUserSession({username:"Mary", email:"maryj@xxx.com"});
 
-        // TODO - should really navigate to profile page
-        if (userType === "dancer"){
-            navigate('/dancer-page');
-        } else if(userType === "manager"){
-            navigate('/management-page');
-        } else {
-            navigate('/physio-page');
-        }
-
-    
-        // check if the entered details match any on record
-        
-        // if they do, login and redirect to user profile page
-
+        setIsLoggedIn(true);
+        navigate(destinationPage);
       };
 
+
     return (
-        <div id="login-page">
+        <div id="login-page" style={{background : background}}>
             <form className="registration-form" onSubmit={submitHandler}>
-                <h1>Login</h1>
+                <h1>{userType} Login</h1>
                 <label htmlFor="email">Email</label>
                 <input
                 type="text"

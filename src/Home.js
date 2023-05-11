@@ -1,14 +1,23 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
+import { setUserType } from './utils/utils.js';
 
 const UserTypeBox = (props) => {
 
     const navigate = useNavigate();
 
+    const register = (event) => {
+        // set user type on session
+        setUserType(props.userType);
+    }
+
     const toLogin = (event) => {
         event.preventDefault();
-        navigate('/login');
+        // set user type on session
+        setUserType(props.userType);
 
+        // navigate to login
+        navigate('/login');
     }
 
     return (
@@ -17,7 +26,7 @@ const UserTypeBox = (props) => {
           <p className="paddedBottom">Some description of what this page will do - bla bla bla bla bla bla</p>
           <button className="paddedBottom" onClick={toLogin}>Login</button>
           <p>Don't have an account?</p>
-          <a href="/register">Sign up</a>
+          <a onClick={register} href="/register">Sign up</a>
       </div>
     );
   };

@@ -11,7 +11,7 @@ const Slot = (props) => {
           <button>Book session </button>
       </div>
     );
-  };
+};
 
 const ConfirmationPopUp = (props) => {
 

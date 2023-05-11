@@ -1,14 +1,28 @@
+import { useState, useEffect } from "react";
 import { BrowserRouter, NavLink, Routes, Route } from "react-router-dom";
 import Home from "./Home.js";
 import Login from "./Login.js";
 import Register from "./Register.js";
-import DancerPage from "./DancerPage.js";
-import PhysioPage from "./PhysioPage.js";
-import ManagementPage from "./ManagementPage.js";
+import Dancer from "./Dancer.js";
+import Physio from "./Physio.js";
+import Management from "./Management.js";
 import PickAppointment from "./PickAppointment.js";
 
 
 function App() {
+
+  const currentUser = JSON.parse(sessionStorage.getItem("user"));
+
+  const [isLoggedIn, setIsLoggedIn] = useState();
+
+  useEffect(() => {
+    if(currentUser){
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, [isLoggedIn, setIsLoggedIn, currentUser]);
+
   return (
     <div className="App">
         <BrowserRouter>
@@ -20,10 +34,10 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />}/>
             <Route path="/register" element={<Register />}/>
-            <Route path="/login" element={<Login />}/>
-            <Route path="/management-page" element={<ManagementPage />}/>
-            <Route path="/physio-page" element={<PhysioPage />}/>
-            <Route path="/dancer-page" element={<DancerPage />}/>
+            <Route path="/login" element={<Login setIsLoggedIn = {setIsLoggedIn}/>}/>
+            <Route path="/management" element={<Management />}/>
+            <Route path="/physio" element={<Physio />}/>
+            <Route path="/dancer" element={<Dancer />}/>
             <Route path="/pick-appointment" element={<PickAppointment />}/>
           </Routes>
         </div>

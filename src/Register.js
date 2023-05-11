@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import { getUserType } from './utils/utils';
 
 const Register = () => {
 
@@ -8,6 +9,17 @@ const Register = () => {
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState(null);
     const navigate = useNavigate();
+
+    var background = "#122932";
+
+    // set background color and destination page depending on the user type
+    const userType = getUserType();
+      
+    if (userType === "Dancer"){
+        background = "#576066";
+    } else if(userType === "Management"){
+        background = "#2C514C";
+    }
 
     const submitHandler = async (event) => {
         event.preventDefault();
@@ -34,9 +46,9 @@ const Register = () => {
       };
 
     return (
-        <div id="register-page">
+        <div id="register-page" style={{background : background}}>
             <form className="registration-form" onSubmit={submitHandler}>
-                <h1>Register</h1>
+                <h1>Register as {userType}</h1>
                 <label htmlFor="email">Email</label>
                 <input
                 type="text"
