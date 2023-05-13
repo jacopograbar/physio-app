@@ -41,7 +41,7 @@ const Login = ({setIsLoggedIn}) => {
         setMessage(null);
 
         // set user in session variable
-        setUserSession({username:"Mary", email:"maryj@xxx.com"});
+        setUserSession({username:"Mary", email:"maryj@xxx.com", company:"Sydney Dance Company"});
 
         setIsLoggedIn(true);
         navigate(destinationPage);
