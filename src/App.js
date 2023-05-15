@@ -7,6 +7,7 @@ import Dancer from "./Dancer.js";
 import Physio from "./Physio.js";
 import Management from "./Management.js";
 import PickAppointment from "./PickAppointment.js";
+import 'react-tooltip/dist/react-tooltip.css'
 
 
 function App() {

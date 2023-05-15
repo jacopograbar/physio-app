@@ -76,6 +76,15 @@ a:hover {
   transform: scale(1.05);
 }
 
+svg {
+  cursor: pointer;
+}
+
+svg:hover {
+  transform: scale(1.1);
+}
+
+
 button,
 .input-btn {
   height: 6vh;
@@ -286,6 +295,7 @@ footer {
 .userpage-wall{
   padding: 5%;
   gap: 5%;
+  align-items: center;
 }
 
 .userpage-options, .userpage-wall{
@@ -313,6 +323,16 @@ footer {
   color: var(--clr-black);
 }
 
+.arrow-header {
+  font-size: 22px;
+  width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6%;
+}
+
+
 
 
 /* Components */
@@ -331,37 +351,42 @@ footer {
   box-shadow: #122932 2px 2px 2px;
 }
 
-/* calendar event */
-.calendar_default_event_inner {
-  background: #2e78d6;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  font-size: 10pt;
-  padding: 5px;
-  opacity: 0.8;
-}
-
 .half-hour-block {
-  width: 50px;
-  height: 100px;
+  width: 100%;
+  height: 30px;
   background-color: var(--clr-white);
   border: solid 1px var(--clr-gunmetal);
   color: var(--clr-black);
   display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+  flex-direction: row;
+  justify-content:space-between;
+  padding: 0% 2%;
   align-items:center;
+  cursor:pointer;
 }
 
 .booked {
-  background-color: var(--clr-thistle);
+  background-color: var(--clr-paynesgray);
   border: solid 1px var(--clr-gunmetal);
-  color: var(--clr-black);
+  color: var(--clr-white);
+}
+
+.half-hour-block:hover{
+  transform: scale(1.01);
 }
 
 .schedule-container {
-  width: 100%;
+  width: 70%;
   display: flex;
+  flex-direction: column;
+}
+
+.physio-unset {
+  background-color: var(--clr-mountbattenpink);
+}
+
+.physio-booked{
+  background-color: var(--clr-slategray);
+  color: var(--clr-white);
 }
 

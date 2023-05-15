@@ -56,8 +56,6 @@ export const getSlotsArray = function (start, end, interval) {
     startTime.add(interval, "minutes");
   }
 
-  console.log(allTimes);
-
   return allTimes;
 };
 
@@ -79,6 +77,32 @@ export const getAvailableSlotsArray = function (availability, interval) {
   console.log(allTimes);
 
   return allTimes;
+};
+
+export const getBookingsArray = function (bookings) {
+
+  var temp = [];
+
+  for (let slot of bookings){
+    temp[slot.start] = slot.patient;
+  }
+
+  console.log(temp);
+
+  return temp;
+};
+
+export const getArray = function (slots) {
+
+  var temp = [];
+
+  for (let slot of slots){
+    temp.push(slot.start);
+  }
+
+  console.log(temp);
+
+  return temp;
 };
 
 export const addThirty = function(start) {
