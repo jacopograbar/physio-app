@@ -74,8 +74,6 @@ export const getAvailableSlotsArray = function (availability, interval) {
     }
   }
 
-  console.log(allTimes);
-
   return allTimes;
 };
 
@@ -86,8 +84,6 @@ export const getBookingsArray = function (bookings) {
   for (let slot of bookings){
     temp[slot.start] = slot.patient;
   }
-
-  console.log(temp);
 
   return temp;
 };

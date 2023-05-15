@@ -1,11 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Appointment } from './Components.js';
 import { getUser } from './utils/utils.js';
 
-
 const Dancer = () => {
 
+    const bookingSlots = [
+        {
+          date: "13/05/2022",
+          start: "11:30",
+          end: "12:00",
+          patient: "Ryan Borges",
+          location: "Sydney Dance Company",
+          physio: "Ashely Cohen"
+        },
+        {
+          date: "13/05/2022",
+          start: "12:00",
+          end: "12:30",
+          patient: "Jacopo Grabar",
+          location: "Sydney Dance Company",
+          physio: "Ashely Cohen"
+        }
+      ];
+
     const currentUser = getUser();
+    const [bookings, setBookings] = useState(bookingSlots);
     
     return (
         <div id="dancer-page">
@@ -17,14 +36,21 @@ const Dancer = () => {
             </div>
            <div className="userpage-options">
             <h2>Options</h2>
-            <a href="/">Link</a>
-            <a href="/">Link</a>
-            <a href="/">Link</a>
+            <a href="/pick-appointment">Book Appointment</a>
+            <a href="/dancer">My Bookings</a>
+            <a href="/"><b>Log Out</b></a>
            </div>
            <div className="userpage-wall">
-            <h1>My Appointments</h1>
-            <Appointment date="28/05/2023" time="10.15 AM" physio="Ashley Cohen"/>
-            <Appointment date="03/07/2023" time="10.45 AM" physio="Ashley Cohen"/>
+            <h1>My Bookings</h1>
+            {bookings.map((slot, index) => (
+              <Appointment
+                key={index}
+                date={slot.date}
+                time={slot.start}
+                location={slot.location}
+                physio={slot.physio}
+              />
+            ))}
            </div>
         </div>
 
