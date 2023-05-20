@@ -59,41 +59,37 @@ export const getSlotsArray = function (start, end, interval) {
   return allTimes;
 };
 
-export const getAvailableSlotsArray = function (availability, interval) {
-
+export const getAvailableSlotsArray = function (start, end, interval) {
   let allTimes = [];
 
-  for (let slot of availability){
-    let startTime = moment(slot.start, "HH:mm");
-    let endTime = moment(slot.end, "HH:mm");
-    while (startTime < endTime) {
-      //Push times
-      allTimes.push(startTime.format("HH:mm"));
-      //Add interval of 30 minutes
-      startTime.add(interval, "minutes");
-    }
+  let startTime = moment(start, "HH:mm");
+  let endTime = moment(end, "HH:mm");
+  while (startTime < endTime) {
+    //Push times
+    allTimes.push(startTime.format("HH:mm"));
+    //Add interval of 30 minutes
+    startTime.add(interval, "minutes");
   }
 
   return allTimes;
 };
 
 export const getBookingsArray = function (bookings) {
-
   var temp = [];
 
-  for (let slot of bookings){
-    temp[slot.start] = slot.patient;
+  for (let slot of bookings) {
+    temp[slot.time] = slot.patient;
   }
 
+  console.log("HEY", temp);
   return temp;
 };
 
 export const getArray = function (slots) {
-
   var temp = [];
 
-  for (let slot of slots){
-    temp.push(slot.start);
+  for (let slot of slots) {
+    temp.push(slot.time);
   }
 
   console.log(temp);
@@ -101,11 +97,19 @@ export const getArray = function (slots) {
   return temp;
 };
 
-export const addThirty = function(start) {
-  
+export const addThirty = function (start) {
   let startTime = moment(start, "HH:mm");
   startTime.add(30, "minutes");
 
   return startTime.format("HH:mm");
-}
+};
 
+// retrieves img from bucket given a username
+export function retrieveImgFromS3(username){
+  var imgName = username.replace(/\s/g, "") + ".jpg";
+  
+  var objectURL = "https://s3876518-a2.s3.amazonaws.com/" + imgName;
+  console.log(objectURL);
+
+  return objectURL;
+}

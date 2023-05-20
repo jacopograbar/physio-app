@@ -1,56 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretRight, faCaretLeft } from "@fortawesome/free-solid-svg-icons";
 import { Slot } from "./Components.js";
+import { getPhysioSlots } from "./utils/appointmentsManager.js";
+import { getUser } from "./utils/utils.js";
+import { useNavigate } from "react-router-dom";
 
 const PickAppointment = () => {
-  const physio = [
-    {
-      date: "13/05/2022",
-      start: "10:00",
-      end: "10:30",
-      physio: "Ashley Cohen",
-      location: "Sydney Dance Company",
-    },
-    {
-      date: "13/05/2022",
-      start: "10:30",
-      end: "11:00",
-      physio: "Ashley Cohen",
-      location: "Sydney Dance Company",
-    },
-    {
-      date: "13/05/2022",
-      start: "11:00",
-      end: "11:30",
-      physio: "Ashley Cohen",
-      location: "Sydney Dance Company",
-    },
-    {
-      date: "13/05/2022",
-      start: "11:30",
-      end: "12:00",
-      physio: "Ashley Cohen",
-      location: "Sydney Dance Company",
-    },
-    {
-      date: "13/05/2022",
-      start: "12:00",
-      end: "12:30",
-      physio: "Ashley Cohen",
-      location: "Sydney Dance Company",
-    },
-  ];
 
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [physioSlots, setPhysioSlots] = useState(physio);
+  const [physioSlots, setPhysioSlots] = useState([]);
+  const currentUser = getUser();
+
+  useEffect(() => {
+    setLoading(true);
+    async function fetchSlots (){
+      const data = await getPhysioSlots(currentDate.toLocaleDateString(), currentUser.company);
+      setPhysioSlots(data);
+      setLoading(false);
+    }
+    fetchSlots();
+  }, [currentDate]);
 
   const nextDay = async (event) => {
     event.preventDefault();
     var date = new Date();
     date.setDate(currentDate.getDate() + 1);
     setCurrentDate(date);
-    // load new physio slots accordingly
   };
 
   const previousDay = async (event) => {
@@ -58,8 +37,11 @@ const PickAppointment = () => {
     var date = new Date();
     date.setDate(currentDate.getDate() - 1);
     setCurrentDate(date);
-    // load new physio slots accordingly
   };
+
+  const backToHome = () => {
+    navigate("/dancer")
+  }
 
   return (
     <div className="home-container appointments-container">
@@ -68,16 +50,20 @@ const PickAppointment = () => {
         <span>{currentDate.toLocaleDateString()}</span>
         <FontAwesomeIcon icon={faCaretRight} onClick={nextDay} />
       </div>
-      {physioSlots.map((slot, index) => (
+      {loading && <h2>Loading...</h2>}
+      {!loading && physioSlots.length === 0 && <h2>There is currently no availability for this date.</h2>}
+      {!loading && physioSlots.length !== 0 && physioSlots.map((slot, index) => (
               <Slot
                 key={index}
-                time={slot.start}
+                time={slot.time}
                 physio={slot.physio}
                 location={slot.location}
                 date={slot.date}
+                company={slot.company}
+                patient={currentUser.username}
               />
             ))}
-      {/* <ConfirmationPopUp date="Tuesday, July 28" time="11.45 AM" physio="Ashley Cohen" /> */}
+      <button onClick={backToHome}>Back to home</button>
     </div>
   );
 };

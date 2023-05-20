@@ -1,108 +1,69 @@
-import React, { useState } from "react";
-import {
-  getBookingsArray,
-  getAvailableSlotsArray,
-  getUser,
-  getArray,
-} from "./utils/utils.js";
+import React, { useState, useEffect } from "react";
+import { getBookingsArray, getUser, getArray } from "./utils/utils.js";
 import { RenderPhysioBlock } from "./Components.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretRight, faCaretLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCaretRight,
+  faCaretLeft
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  getAvailabilitySlots,
+  getBookingsByDate,
+  getPhysioSlots,
+} from "./utils/appointmentsManager.js";
 
 const Physio = () => {
-  const availability = [
-    {
-      date: "13/05/2022",
-      start: "10:00",
-      end: "12:30",
-      location: "Sydney Dance Company",
-    },
-    {
-      date: "13/05/2022",
-      start: "14:00",
-      end: "15:30",
-      location: "Sydney Dance Company",
-    },
-    {
-      date: "13/05/2022",
-      start: "16:00",
-      end: "16:30",
-      location: "Sydney Dance Company",
-    },
-  ];
-
-  const physio = [
-    {
-      date: "13/05/2022",
-      start: "10:00",
-      end: "10:30",
-      location: "Sydney Dance Company",
-    },
-    {
-      date: "13/05/2022",
-      start: "10:30",
-      end: "11:00",
-      location: "Sydney Dance Company",
-    },
-    {
-      date: "13/05/2022",
-      start: "11:00",
-      end: "11:30",
-      location: "Sydney Dance Company",
-    },
-    {
-      date: "13/05/2022",
-      start: "11:30",
-      end: "12:00",
-      location: "Sydney Dance Company",
-    },
-    {
-      date: "13/05/2022",
-      start: "12:00",
-      end: "12:30",
-      location: "Sydney Dance Company",
-    },
-  ];
-
-  const availability2 = [
-    {
-      date: "13/05/2022",
-      start: "08:00",
-      end: "10:30",
-      location: "Sydney Dance Company",
-    },
-  ];
-
-  const bookingSlots = [
-    {
-      date: "13/05/2022",
-      start: "11:30",
-      end: "12:00",
-      patient: "Ryan Borges",
-      location: "Sydney Dance Company",
-    },
-    {
-      date: "13/05/2022",
-      start: "12:00",
-      end: "12:30",
-      patient: "Jacopo Grabar",
-      location: "Sydney Dance Company",
-    },
-  ];
-
   const currentUser = getUser();
   // change date to state
+  const [loading, setLoading] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [currentAvailability, setCurrentAvailability] = useState(availability);
-  const [physioSlots, setPhysioSlots] = useState(physio);
-  const [bookings, setBookings] = useState(bookingSlots);
+  const [currentAvailability, setCurrentAvailability] = useState([]);
+  const [physioSlots, setPhysioSlots] = useState([]);
+  const [bookings, setBookings] = useState([]);
+  const [physio, setPhysio] = useState("");
+
+  useEffect(() => {
+    async function fetchAvailability() {
+      setLoading(true);
+      const avData = await getAvailabilitySlots(
+        currentDate.toLocaleDateString(),
+        currentUser.company
+      );
+      setCurrentAvailability(avData);
+
+      const phData = await getPhysioSlots(
+        currentDate.toLocaleDateString(),
+        currentUser.company
+      );
+      setPhysioSlots(phData);
+
+      const bData = await getBookingsByDate(
+        currentUser.company,
+        currentDate.toLocaleDateString()
+      );
+      setBookings(bData);
+      setLoading(false);
+    }
+    fetchAvailability();
+    if(bookings.length !== 0){
+      setPhysio(bookings[0].physio);
+    }
+    setRefresh(false);
+  }, [currentDate, refresh, setCurrentAvailability, setPhysioSlots, setBookings, setPhysio]); // set to currentAvailability when you want to render
 
   // retrieve availability and physio schedule from cloud
   // if no availability, display no availability for today
-  const availabilitySlot = getAvailableSlotsArray(currentAvailability, 30);
+  const availabilitySlot = getArray(currentAvailability);
   const bookingsArray = getBookingsArray(bookings);
   const physioSlotsArray = getArray(physioSlots);
-  // TO-DO   const bookings = getBookings(date)
+  const allSlots = [
+    ...availabilitySlot,
+    ...physioSlotsArray,
+    ...getArray(bookings),
+  ].sort();
+  console.log(allSlots);
+
   var location = "-";
 
   if (currentAvailability.length !== 0) {
@@ -114,7 +75,6 @@ const Physio = () => {
     var date = new Date();
     date.setDate(currentDate.getDate() + 1);
     setCurrentDate(date);
-    setCurrentAvailability(availability2);
   };
 
   const previousDay = async (event) => {
@@ -122,21 +82,25 @@ const Physio = () => {
     var date = new Date();
     date.setDate(currentDate.getDate() - 1);
     setCurrentDate(date);
-    setCurrentAvailability(availability);
   };
+
+  function logOut() {
+    sessionStorage.clear();
+  }
 
   return (
     <div id="physio-page">
       <div className="userpage-header">
         <div className="profile-pic">
-          <img src="../pic1.png" alt="profile pic" />
+          <img src={currentUser.img_url}  alt="profile pic" />
         </div>
         <h2>{currentUser.username}'s Physio Dashboard</h2>
       </div>
       <div className="userpage-options management-clr">
         <h2>Options</h2>
-        <a href="/">Change date</a>
-        <a href="/"><b>Log out</b></a>
+        <a href="/" onClick={logOut}>
+          <b>Log out</b>
+        </a>
       </div>
       <div className="userpage-wall">
         <h1>Physio Schedule and Company Availability</h1>
@@ -145,14 +109,19 @@ const Physio = () => {
           <span>{currentDate.toLocaleDateString()}</span>
           <FontAwesomeIcon icon={faCaretRight} onClick={nextDay} />
         </div>
-        {currentAvailability.length !== 0 && (
+        {loading && <h2>Loading...</h2>}
+        {!loading && currentAvailability.length !== 0 && (
           <div className="schedule-container">
-            {availabilitySlot.map((slot, index) => (
+            {allSlots.map((slot, index) => (
               <RenderPhysioBlock
                 slot={slot}
                 bookings={bookingsArray}
                 physioSlots={physioSlotsArray}
                 location={location}
+                physio={physio}
+                company={currentUser.company}
+                date={currentDate.toLocaleDateString()}
+                setRefresh = {setRefresh}
               />
             ))}
           </div>

@@ -1,79 +1,98 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUserType, setUserSession } from './utils/utils.js';
+import { getUserType, setUserSession, retrieveImgFromS3 } from "./utils/utils.js";
+import axios from "axios";
 
-const Login = ({setIsLoggedIn}) => {
+const loginURL =
+  "https://12pwbl14l1.execute-api.us-east-1.amazonaws.com/prod/login";
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [message, setMessage] = useState(null);
-    const navigate = useNavigate();
+const Login = ({ setIsLoggedIn }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState(null);
+  const navigate = useNavigate();
 
-    var background = "#122932";
-    var destinationPage = "";
+  var background = "#122932";
+  var destinationPage = "";
 
-    // set background color and destination page depending on the user type
-    const userType = getUserType();
-      
-    if (userType === "Dancer"){
-        background = "#576066";
-        destinationPage = "/dancer";
-    } else if(userType === "Management"){
-        background = "#2C514C";
-        destinationPage = "/management";
-    } else {
-        destinationPage = "/physio";
-    }
+  // set background color and destination page depending on the user type
+  const userType = getUserType();
 
-    const submitHandler = async (event) => {
-        event.preventDefault();
-        console.log("working");
-    
-        // make all fields required
-        if (
-          email.trim() === "" ||
-          password.trim() === ""
-        ) {
-          setMessage("All fields required");
-          return;
-        }
-        // reset error message
-        setMessage(null);
+  if (userType === "Dancer") {
+    background = "#576066";
+    destinationPage = "/dancer";
+  } else if (userType === "Management") {
+    background = "#2C514C";
+    destinationPage = "/management";
+  } else {
+    destinationPage = "/physio";
+  }
 
-        // set user in session variable
-        setUserSession({username:"Mary", email:"maryj@xxx.com", company:"Sydney Dance Company"});
+  const submitHandler = async (event) => {
+    event.preventDefault();
+    console.log("working");
 
+    const requestConfig = {
+      headers: {
+        "x-api-key": "c2WkiIoZLc67GbReWwKPP1tbZIQglNMu88ifIUQX",
+      },
+    };
+
+    const requestBody = {
+      email: email,
+      type: userType,
+      password: password,
+    };
+
+    axios
+      .post(loginURL, requestBody, requestConfig)
+      .then((response) => {
+        setMessage("Login Succesful");
+        setUserSession({
+          username: response.data.username,
+          email: response.data.email,
+          company: response.data.company,
+          type: response.data.type,
+          img_url: retrieveImgFromS3(response.data.username)
+        });
         setIsLoggedIn(true);
         navigate(destinationPage);
-      };
+      })
+      .catch((error) => {
+        setMessage(error.response.data.message);
+      });
+  };
 
-
-    return (
-        <div id="login-page" style={{background : background}}>
-            <form className="registration-form" onSubmit={submitHandler}>
-                <h1>{userType} Login</h1>
-                <label htmlFor="email">Email</label>
-                <input
-                type="text"
-                id="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                />
-                <label htmlFor="password">Password</label>
-                <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                />
-                {/* if the message is defined, show it */}
-                {message && <p className="error-message">{message}</p>}
-                <input id="register-btn" className="input-btn" type="submit" value="Login" />
-            </form>
-
-        </div>
-
-    )
-}
+  return (
+    <div id="login-page" style={{ background: background }}>
+      <form className="registration-form" onSubmit={submitHandler}>
+        <h1>{userType} Login</h1>
+        <input type="hidden" id="type" value={userType} />
+        <label htmlFor="email">Email</label>
+        <input
+          type="text"
+          id="email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+        />
+        <label htmlFor="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+        />
+        {/* if the message is defined, show it */}
+        {message && <p className="error-message">{message}</p>}
+        <input
+          id="register-btn"
+          className="input-btn"
+          type="submit"
+          value="Login"
+        />
+      </form>
+    </div>
+  );
+};
 
 export default Login;

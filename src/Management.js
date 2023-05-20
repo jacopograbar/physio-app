@@ -1,69 +1,70 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   getAvailableSlotsArray,
   getSlotsArray,
+  getArray,
   getUser,
+  addThirty,
 } from "./utils/utils.js";
 import { RenderBlock } from "./Components.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretRight, faCaretLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  addAvailabilitySlot,
+  getAvailabilitySlots,
+} from "./utils/appointmentsManager.js";
+
 
 const Management = () => {
-
-  const availability = [
-    {
-      date: "13/05/2022",
-      start: "10:00",
-      end: "12:30",
-      location: "Sydney Dance Company",
-    },
-    {
-      date: "13/05/2022",
-      start: "14:00",
-      end: "15:30",
-      location: "Sydney Dance Company",
-    },
-    {
-      date: "13/05/2022",
-      start: "16:00",
-      end: "16:30",
-      location: "Sydney Dance Company",
-    },
-  ];
-
-  const availability2 = [
-    {
-      date: "13/05/2022",
-      start: "08:00",
-      end: "10:30",
-      location: "Bendigo",
-    }
-  ];
-
-
   const currentUser = getUser();
   // change date to state
+  const [loading, setLoading] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [startTime, setStartTime] = useState("08:00");
   const [endTime, setEndTime] = useState("18:00");
-  const [currentAvailability, setCurrentAvailability] = useState(availability);
-
+  const [currentAvailability, setCurrentAvailability] = useState([]);
+  const [newLocation, setNewLocation] = useState("");
   // retrieve availability and physio schedule from cloud
   // if no availability, display no availability for today
 
+  useEffect(() => {
+    async function fetchAvailability() {
+      setLoading(true);
+      const data = await getAvailabilitySlots(
+        currentDate.toLocaleDateString(),
+        currentUser.company
+      );
+      setCurrentAvailability(data);
+      setLoading(false);
+    }
+    setRefresh(false);
+    fetchAvailability();
+  }, [currentDate, refresh, setCurrentAvailability]);
+
+  const availabilitySlots = getArray(currentAvailability);
   const workDaySlots = getSlotsArray("8.00", "18.00", 30);
-  const availabilitySlot = getAvailableSlotsArray(currentAvailability, 30);
   var location = "-";
 
-  if (currentAvailability.length !== 0){
+  if (currentAvailability.length !== 0) {
     location = currentAvailability[0].location;
   }
 
-  // const availability = null;
-
   const addAvailability = async (event) => {
     event.preventDefault();
-    console.log("adding availability to the cloud");
+    const availabilityTimes = getAvailableSlotsArray(startTime, endTime, 30);
+
+    for (let timeSlot of availabilityTimes) {
+      let slotDetails = {
+        date: currentDate.toLocaleDateString(),
+        time: timeSlot,
+        company: currentUser.company,
+        endTime: addThirty(timeSlot),
+        location: newLocation,
+      };
+      await addAvailabilitySlot(slotDetails);
+      setRefresh(true);
+    }
   };
 
   const nextDay = async (event) => {
@@ -71,7 +72,6 @@ const Management = () => {
     var date = new Date();
     date.setDate(currentDate.getDate() + 1);
     setCurrentDate(date);
-    setCurrentAvailability(availability2);
   };
 
   const previousDay = async (event) => {
@@ -79,21 +79,23 @@ const Management = () => {
     var date = new Date();
     date.setDate(currentDate.getDate() - 1);
     setCurrentDate(date);
-    setCurrentAvailability(availability);
   };
+
+  function logOut() {
+    sessionStorage.clear();
+  }
 
   return (
     <div id="management-page">
       <div className="userpage-header">
         <div className="profile-pic">
-          <img src="../pic1.png" alt="profile pic" />
+          <img src={currentUser.img_url} alt="profile pic" />
         </div>
         <h2>{currentUser.company} Management</h2>
       </div>
       <div className="userpage-options management-clr">
         <h2>Options</h2>
-        <a href="/">Change Date</a>
-        <a href="/">Log out</a>
+        <a href="/" onClick={logOut}>Log out</a>
       </div>
       <div className="userpage-wall">
         <h1>Current availability</h1>
@@ -102,13 +104,18 @@ const Management = () => {
           <span>{currentDate.toLocaleDateString()}</span>
           <FontAwesomeIcon icon={faCaretRight} onClick={nextDay} />
         </div>
-        {currentAvailability.length !== 0 && (
+        {loading && <h2>Loading...</h2>}
+        {!loading && currentAvailability.length !== 0 && (
           <div className="schedule-container">
             {workDaySlots.map((slot, index) => (
               <RenderBlock
+                key={index}
                 slot={slot}
-                availabilitySlot={availabilitySlot}
+                availabilitySlot={availabilitySlots}
                 location={location}
+                date={currentDate.toLocaleDateString()}
+                company={currentUser.company}
+                setRefresh={setRefresh}
               />
             ))}
           </div>
@@ -118,7 +125,9 @@ const Management = () => {
             <h2 className="h2-marginBtm">
               No availability has currently been set for this date.
             </h2>
-            <h2>Set company availability for {currentDate.toLocaleDateString()}</h2>
+            <h2>
+              Set company availability for {currentDate.toLocaleDateString()}
+            </h2>
             <form className="registration-form" onSubmit={addAvailability}>
               <label htmlFor="start">From</label>
               <input
@@ -133,6 +142,13 @@ const Management = () => {
                 id="end"
                 value={endTime}
                 onChange={(event) => setEndTime(event.target.value)}
+              ></input>
+              <label htmlFor="newLocation">Location</label>
+              <input
+                type="text"
+                id="newLocation"
+                value={newLocation}
+                onChange={(event) => setNewLocation(event.target.value)}
               ></input>
               <input
                 id="availability-btn"
