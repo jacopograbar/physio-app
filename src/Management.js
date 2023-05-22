@@ -128,7 +128,7 @@ const Management = () => {
             <h2>
               Set company availability for {currentDate.toLocaleDateString()}
             </h2>
-            <form className="registration-form" onSubmit={addAvailability}>
+            <form className="registration-form wider" onSubmit={addAvailability}>
               <label htmlFor="start">From</label>
               <input
                 type="time"

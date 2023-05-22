@@ -299,6 +299,15 @@ footer {
   color: black;
 }
 
+#availability-btn{
+  width: 50%;
+}
+
+.wider {
+  width: 100%;
+  margin-top: 5%;
+}
+
 .userpage-options {
   background-color: var(--clr-mountbattenpink);
   grid-column: 1/2;
