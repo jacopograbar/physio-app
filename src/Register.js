@@ -7,10 +7,10 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 const region = "us-east-1";
 const creds = {
-  secretAccessKey: "7a+Jn4lIQXyv8rCZx1FSXlxUAH3pvOYgW+fP2abK",
-  accessKeyId: "ASIA6IEYYI74UMNFIZ6Y",
+  secretAccessKey: "dMmg+s9FCXLb67Q+d1X/bqSMRaHMVY57IxBeLpdY",
+  accessKeyId: "ASIA6IEYYI74QOOUDT4N",
   sessionToken:
-    "FwoGZXIvYXdzEKL//////////wEaDEkY7dhpv/qbVoEVYyLNASifQQhQKPoxWI9u6nKbpEOiyeVVp8bwrNJyOArZWaE2FxqSJG2yVcnqp2vYD7H28fwa3Wi7EovMot+Q41JWZqgwvAVs48u26O4xIYb5N7SzoaKSVL5b1URDv6An65wKBRm1P3AL3hP+RHMuy9JEWB8L5RA9JM+fVv4VTTNP1DEP1ZBWioshZf/GO9DQ78sPdSXuLGLO+JEJNN+RgJstVhHR7Jek+b5OJGvdzFbJOjrdwCYjraGzlSSoDBgaQjy8s9gfUQJtDpCw6+1TC28ooMWsowYyLauzb7wfuI+rQ5KKruk2EacxOhfQZA+kKhFw1xC7O44aE5lyz9GEfuWOrJHhow==",
+    "FwoGZXIvYXdzEKX//////////wEaDFOw0hMQjcal17g4KCLNAZi6K9OA/xgaOmXXJtdzz5SknLUZW6Uw97tOI2LGf6r5tcF/ZKfNILv8TspS7zfGQal3zCK5jtddrHst2yLwBmZCRV5a2gy+af5U++f1JrmzoBeC2c2I4ItxDNF1ltsyA+Z5C0NgRuGRQPoLeY6dE5tuKH48lVaoqUw2ZPK0C7IKnlyYSvWAFNt16BmHrepj/tbDXHpFiCaLum9C102G2aoTDOU2dMCQUyjG4RN71kdvs/a6Xe2bs6NI8kOkHdHzG1TY2dGNZCuWiURovMooipmtowYyLe5VGa2+Q+x7enfDSBvoOflPZG66AIUNOomNByYUcDbBnVHryfcWtJmH5O9LSA==",
 };
 
 const s3client = new S3Client({
